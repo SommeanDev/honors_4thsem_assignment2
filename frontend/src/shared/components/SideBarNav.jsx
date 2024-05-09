@@ -28,8 +28,8 @@ const SideBarNav = () => {
     const authMenuList = [
         { title: "User List", to: "/users", gap: true },
         { title: "Create User", to: "/register" },
-        { title: "Post List ", to: "/", gap: true },
-        { title: "Create Post", to: "/" },
+        { title: "Post List ", to: "/posts", gap: true },
+        { title: "Create Post", to: "/create-post" },
     ];
 
     const anonMenuList = [

@@ -1,6 +1,7 @@
 import './database/connection.js'
 import express from 'express';
 import usersRoutes from './routes/users-routes.js';
+import postsRouter from './routes/posts-routes.js';
 import HttpError from './models/http-error.js';
 import path from 'path';
 import { unlink } from 'fs';
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 app.use('/api/users', usersRoutes);
+app.use('/api/posts', postsRouter);
 
 app.use((req, res, next) => {
     throw new HttpError('Page does not exist', 404);

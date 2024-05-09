@@ -9,7 +9,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/users`);
+        const response = await axios.get(`http://localhost:3000/api/users?page=${currentPage}`);
         setUsers(response.data.userList);
         console.log(response.data);
         setTotalPages(response.data.totalPages);

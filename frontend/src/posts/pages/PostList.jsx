@@ -9,10 +9,9 @@ const PostList = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/posts`);
-        setPosts(response.data.posts);
+        const response = await axios.get(`http://localhost:3000/api/posts?page=${currentPage}`);
+        setPosts(response.data.postList);
         setTotalPages(response.data.totalPages);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
@@ -26,24 +25,25 @@ const PostList = () => {
   };
 
   return (
-    <div className="container px-4 mx-auto">
-      <h2 className="my-8 text-3xl font-bold">Recent Posts</h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => (
-          <div key={post.id} className="p-6 bg-white rounded-md shadow-md">
-            {post.image && (
-              <img src={post.image} alt={post.title} className="object-cover w-full h-40 mb-4 rounded-md" />
-            )}
-            <h3 className="mb-2 text-lg font-semibold">{post.title}</h3>
-            <p className="mb-4 text-gray-600">{post.content.substring(0, 100)}...</p>
-            <a href={`/posts/${post.id}`} className="text-blue-500 hover:underline">
-              Read more
-            </a>
-            <div className="flex items-center justify-between mt-4">
-              <p className="text-gray-500">{post.author}</p>
-            </div>
-          </div>
-        ))}
+    <div className="w-full h-full p-10">
+      <h2 className="mb-6 text-2xl font-bold text-center">Post List</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="px-4 py-2">Title</th>
+              <th className="px-4 py-2">Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post) => (
+              <tr key={post.id} className="even:bg-gray-100">
+                <td className="px-4 py-2">{post.title}</td>
+                <td className="px-4 py-2">{post.content}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="flex justify-center mt-6">
         <button

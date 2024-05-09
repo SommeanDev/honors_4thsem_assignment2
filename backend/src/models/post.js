@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
 const postSchema = new Schema({
-    username: {type: String, required: true},
+    author: {type: String, required: true},
     title: {type: String, required: true},
     content: {type: String, required: true},
     image: {type: String},
@@ -12,4 +12,4 @@ const postSchema = new Schema({
 
 postSchema.plugin(uniqueValidator);
 
-export default model('Post', userSchema);
+export default model('Post', postSchema);

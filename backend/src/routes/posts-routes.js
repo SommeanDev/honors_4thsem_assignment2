@@ -11,12 +11,10 @@ const postsRouter = Router();
 postsRouter.post(
   '/',
   [
-    check('username').not().isEmpty(),
+    check('author').not().isEmpty(),
     check('title').not().isEmpty(),
     check('content').not().isEmpty(),
   ],
-  validateInput,
-  authCheck,
   createPost
 );
 
