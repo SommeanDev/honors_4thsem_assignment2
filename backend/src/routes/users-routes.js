@@ -8,7 +8,7 @@ import fileUpload from '../middleware/file-upload.js';
 const usersRouter = Router();
 
 usersRouter.post(
-    '/login', 
+    '/login',
     [
         check('email').normalizeEmail().isEmail(),
         check('password').not().isEmpty(),
@@ -17,34 +17,41 @@ usersRouter.post(
     login
 );
 
-usersRouter.use(authCheck);
-usersRouter.get(
-    '/:id', 
-    param('id').isAlphanumeric(),
-    validateInput,
-    getUser
-);
-usersRouter.get('/', getUserList);
 usersRouter.post(
-    '/', 
+    '/register',
     fileUpload.single('image'),
     [
         check('name').not().isEmpty(),
         check('email').normalizeEmail().isEmail(),
         check('password').not().isEmpty(),
+        check('role').not().isEmpty(),
     ],
     validateInput,
-    authAdminCheck, 
     createUser
 );
+
+usersRouter.get('/', getUserList);
+usersRouter.use(authCheck);
+usersRouter.use(authAdminCheck); // Move authAdminCheck after authCheck
+
+usersRouter.get(
+    '/:id',
+    param('id').isAlphanumeric(),
+    validateInput,
+    getUser
+);
+
+
+
 usersRouter.delete(
-    '/:id', 
+    '/:id',
     param('id').isAlphanumeric(),
     validateInput,
     deleteUser,
 );
+
 usersRouter.patch(
-    '/:id', 
+    '/:id',
     fileUpload.single('image'),
     param('id').isAlphanumeric(),
     validateInput,

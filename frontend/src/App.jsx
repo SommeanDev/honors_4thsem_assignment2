@@ -5,6 +5,7 @@ import UserList from './admin/users/pages/UserList';
 import Login from './admin/users/pages/Login';
 import { AuthContext } from './shared/context/auth-context';
 import { useState, useCallback } from 'react';
+import CreateUser from './admin/users/pages/CreateUser';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<CreateUser />} />  
         </Routes>        
       </Router>
       </AuthContext.Provider>

@@ -27,30 +27,80 @@ const login = async (req, res, next) => {
     }
 }
 
+// const createUser = async (req, res, next) => {
+//     try {
+//         const existingUser = await User.findOne({ email: req.body.email });
+//         if (existingUser) {
+//             throw new HttpError('User already exists', 401);
+//         }
+//         const hashedPassword = await bcrypt.hash(req.body.password, 12);
+//         const imagePath = req.file ? req.file.path : null;
+//         const newUser = new User({
+//             id: uuid(),
+//             name: req.body.name,
+//             email: req.body.email,
+//             password: hashedPassword,
+//             biodata: req.body.biodata,
+//         });
+//         if (imagePath) {
+//             newUser.image = imagePath;
+//         }
+//         const savedUser = await newUser.save();
+//         const {id, name, email, role, image, biodata} = savedUser;
+//         res.json({id, name, email, role, image, biodata});
+//     } catch (error) {
+//         return handleError(error, next, 'Error while creating new user');
+//     }
+// };
+
 const createUser = async (req, res, next) => {
-    try {
-        const existingUser = await User.findOne({ email: req.body.email });
-        if (existingUser) {
-            throw new HttpError('User already exists', 401);
-        }
-        const hashedPassword = await bcrypt.hash(req.body.password, 12);
-        const imagePath = req.file ? req.file.path : null;
-        const newUser = new User({
-            id: uuid(),
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword,
-            biodata: req.body.biodata,
-        });
-        if (imagePath) {
-            newUser.image = imagePath;
-        }
-        const savedUser = await newUser.save();
-        const {id, name, email, role, image, biodata} = savedUser;
-        res.json({id, name, email, role, image, biodata});
-    } catch (error) {
-        return handleError(error, next, 'Error while creating new user');
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
+
+  const { name, email, password, role } = req.body;
+  const hashed_password = await bcrypt.hash(password, 12);
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError(
+      'Signing up failed, email already exists, please try again later.',
+      500
+    );
+    return next(error);
+  }
+
+  if (existingUser) {
+    const error = new HttpError(
+      'User exists already, please login instead.',
+      422
+    );
+    return next(error);
+  }
+
+  const createdUser = new User({
+    name,
+    email,
+    hashed_password,
+    role: role || 'user', // Set the role explicitly
+    image: null,
+  });
+
+  try {
+    await createdUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, couldn't save user, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
 const deleteUser = async (req, res, next) => {

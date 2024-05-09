@@ -27,13 +27,14 @@ const SideBarNav = () => {
 
     const authMenuList = [
         { title: "User List", to: "/users", gap: true },
-        { title: "Create User", to: "/" },
+        { title: "Create User", to: "/register" },
         { title: "Post List ", to: "/", gap: true },
         { title: "Create Post", to: "/" },
     ];
 
     const anonMenuList = [
         { title: "Login", to: "/login", gap: true },
+        { title: "Register", to: "/register" }
     ];
     const shouldOpen = (open || hover);
     return (
